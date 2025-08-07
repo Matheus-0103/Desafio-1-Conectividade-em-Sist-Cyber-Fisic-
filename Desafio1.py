@@ -100,6 +100,7 @@ quadro_binario = camada_fisica(quadro)
 
 print("-" * 25)
 
+
 if "9g" == mac_destino:
     desencapsular(quadro_binario)
 else:
