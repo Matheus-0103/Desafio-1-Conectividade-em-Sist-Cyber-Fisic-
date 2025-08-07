@@ -1,3 +1,5 @@
+# modelo_osi.py
+
 def camada_aplicacao(dados):
     etiqueta = "[APLICAÇÃO]"
     print(f"{etiqueta}: Enviando a letra '{dados}'")
@@ -32,7 +34,7 @@ def camada_rede(dados, ip_origem, ip_destino):
 def camada_enlace(dados, mac_origem, mac_destino):
     etiqueta = "[ENLACE]"
     header_enlace = f"MAC Origem: {mac_origem}, MAC Destino: {mac_destino}"
-    trailer_enlace = "[CRC]"  # Simulação de um trailer
+    trailer_enlace = "[CRC]"
     dados_encapsulados = f"{etiqueta} [{header_enlace}] {dados} {trailer_enlace}"
     print(f"{etiqueta}: Criando o quadro com cabeçalho e trailer... -> {dados_encapsulados}")
     return dados_encapsulados
@@ -44,13 +46,11 @@ def camada_fisica(quadro):
     print(f"{etiqueta}: Dado binário pronto para transmissão -> {quadro_binario}")
     return quadro_binario
 
-
 def desencapsular(quadro):
-    print("\nSimulando o recebimento do quadro e o processo de desencapsulamento...")
-    
+    print("\n===== SIMULAÇÃO DE RECEPÇÃO =====")
     quadro_texto = ''.join(chr(int(byte, 2)) for byte in quadro.split())
     print(f"[FÍSICA]: Quadro recebido em texto -> {quadro_texto}")
-    
+
     partes = quadro_texto.split("[ENLACE] [")
     payload_enlace = partes[1].split("] ")[1].split(" [CRC]")[0]
     print(f"[ENLACE]: Removendo cabeçalho e trailer... -> {payload_enlace}")
@@ -58,11 +58,10 @@ def desencapsular(quadro):
     partes = payload_enlace.split("[REDE] [")
     payload_rede = partes[1].split("] ")[1]
     print(f"[REDE]: Removendo cabeçalho de rede... -> {payload_rede}")
-    
+
     partes = payload_rede.split("[TRANSPORTE] [")
     payload_transporte = partes[1].split("] ")[1]
     print(f"[TRANSPORTE]: Removendo cabeçalho de transporte... -> {payload_transporte}")
-
 
     partes = payload_transporte.split("[SESSÃO] ")
     payload_sessao = partes[1]
@@ -76,14 +75,15 @@ def desencapsular(quadro):
     dados_finais = partes[1]
     print(f"[APLICAÇÃO]: O dado original é '{dados_finais}'")
 
-    print(f"\nDispositivo de destino recebeu com sucesso a letra: {dados_finais}")
+    print(f"\n🎯 Dispositivo de destino recebeu com sucesso a letra: '{dados_finais}'")
 
 
-
-
-print("--- Simulação do Envio ---")
-print("Dados a serem enviados: A")
-print("-" * 25)
+# ===============================
+# INÍCIO DA SIMULAÇÃO
+# ===============================
+print("===== SIMULAÇÃO DO ENVIO =====")
+print("📨 Dados a serem enviados: 'A'")
+print("-" * 50)
 
 mac_origem = "#B"
 mac_destino = "9g"
@@ -100,9 +100,10 @@ dados_rede = camada_rede(dados_transporte, ip_origem, ip_destino)
 quadro = camada_enlace(dados_rede, mac_origem, mac_destino)
 quadro_binario = camada_fisica(quadro)
 
-print("-" * 25)
+print("-" * 50)
+print(f"📡 Enviando para dispositivo de destino: {mac_destino}")
 
-if "9g" == mac_destino:
+if mac_destino == "9g":
     desencapsular(quadro_binario)
 else:
-    print("O quadro foi descartado, pois não é destinado a este dispositivo.")
+    print("❌ O quadro foi descartado: não era destinado a este dispositivo.")
