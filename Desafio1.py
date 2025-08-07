@@ -79,6 +79,8 @@ def desencapsular(quadro):
     print(f"\nDispositivo de destino recebeu com sucesso a letra: {dados_finais}")
 
 
+
+
 print("--- Simulação do Envio ---")
 print("Dados a serem enviados: A")
 print("-" * 25)
@@ -99,7 +101,6 @@ quadro = camada_enlace(dados_rede, mac_origem, mac_destino)
 quadro_binario = camada_fisica(quadro)
 
 print("-" * 25)
-
 
 if "9g" == mac_destino:
     desencapsular(quadro_binario)
